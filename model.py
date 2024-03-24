@@ -1,5 +1,7 @@
 import paddle
-from parameters import train_parameters
+from base_fun import read_json_file
+
+train_parameters = read_json_file("work/parameters.json")
 
 # 定义卷积池化网络
 class ConvPool(paddle.nn.Layer):

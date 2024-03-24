@@ -5,10 +5,11 @@ from model import VGGNet
 import os
 import sys
 from PIL import Image
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
-from base_fun import load_image
-from parameters import train_parameters
+from base_fun import load_image,read_json_file
+
+train_parameters = read_json_file("work/parameters.json")
 
 # 标签集
 label_dic = train_parameters['label_dict']
@@ -18,7 +19,7 @@ model__state_dict = paddle.load('work/checkpoints/save_dir_final.pdparams')
 model_predict = VGGNet()
 model_predict.set_state_dict(model__state_dict) 
 model_predict.eval()
-infer_imgs_path = os.listdir("infer")
+infer_imgs_path = os.listdir("infer/")
 # print(infer_imgs_path)
 
 # 预测所有图片

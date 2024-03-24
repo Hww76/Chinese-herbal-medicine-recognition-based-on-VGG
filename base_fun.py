@@ -7,8 +7,6 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from paddle.io import Dataset
-from parameters import train_parameters
-from model import VGGNet
 random.seed(200)
 
 # 解压文件夹
@@ -22,6 +20,8 @@ def get_data_list(target_path,train_list_path,eval_list_path):
     '''
     生成数据列表
     '''
+    #配置信息的json文件转换为字典
+    train_parameters = read_json_file("work/parameters.json")
     #存放所有类别的信息
     class_detail = []
     #获取所有类别保存的文件夹名称
@@ -71,7 +71,10 @@ def get_data_list(target_path,train_list_path,eval_list_path):
             class_label += 1 
             
     #初始化分类数
-    train_parameters['class_dim'] = class_dim
+    train_parameters.update({'class_dim' : class_dim})
+    print(train_parameters)
+    #将json文件写回
+    write_json_file("work/parameters.json",train_parameters)
   
     #乱序  
     random.shuffle(eval_list)
@@ -108,7 +111,8 @@ class dataset(Dataset):
         self.labels = []
 
         if mode == 'train':
-            with open(os.path.join(self.data_path, "train.txt"), "r", encoding="utf-8") as f:
+            # with open(os.path.join(self.data_path, "train.txt"), "r", encoding="utf-8") as f:
+            with open(self.data_path + "/train.txt", "r", encoding="utf-8") as f:
                 self.info = f.readlines()
             for img_info in self.info:
                 img_path, label = img_info.strip().split('\t')
@@ -116,7 +120,8 @@ class dataset(Dataset):
                 self.labels.append(int(label))
 
         else:
-            with open(os.path.join(self.data_path, "eval.txt"), "r", encoding="utf-8") as f:
+            # with open(os.path.join(self.data_path, "eval.txt"), "r", encoding="utf-8") as f:
+            with open(self.data_path + "/eval.txt", "r", encoding="utf-8") as f:
                 self.info = f.readlines()
             for img_info in self.info:
                 img_path, label = img_info.strip().split('\t')
@@ -171,3 +176,14 @@ def load_image(img_path):
     img = np.array(img).astype('float32') 
     img = img.transpose((2, 0, 1)) / 255 # HWC to CHW 及归一化
     return img
+
+# 读取json文件
+def read_json_file(file_path):
+    with open(file_path, "r") as file:
+        result = json.load(file) # 将json格式的文件加载为字典类型
+        return result
+    
+def write_json_file(file_path, dict):
+    with open("work/parameters.json", 'w', encoding='utf-8') as file:
+        json_content = json.dumps(dict, indent=4) # 将字典对象转换为字符串
+        file.write(json_content) # 将字符串写入文件

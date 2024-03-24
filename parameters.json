@@ -1,0 +1,28 @@
+{
+    "source_path": "C:/Users/Somls/Desktop/code",
+    "src_path": "C:/Users/Somls/Desktop/code/data/Chinese Medicine.zip",
+    "target_path": "C:/Users/Somls/Desktop/code/data/",
+    "train_list_path": "C:/Users/Somls/Desktop/code/data/train.txt",
+    "eval_list_path": "C:/Users/Somls/Desktop/code/data/eval.txt",
+    "label_dict": {
+        "0": "baihe",
+        "1": "dangshen",
+        "2": "gouqi",
+        "3": "huaihua",
+        "4": "jinyinhua"
+    },
+    "readme_path": "C:/Users/Somls/Desktop/code/data/readme.json",
+    "class_dim": 5,
+    "input_size": [
+        3,
+        224,
+        224
+    ],
+    "num_epochs": 35,
+    "skip_steps": 10,
+    "save_steps": 100,
+    "learning_strategy": {
+        "lr": 0.0001
+    },
+    "checkpoints": "C:/Users/Somls/Desktop/code/work/checkpoints"
+}

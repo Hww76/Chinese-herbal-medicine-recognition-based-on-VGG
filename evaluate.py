@@ -5,7 +5,7 @@ from base_fun import dataset
 # 模型评估
 
 #评估数据加载
-eval_dataset = dataset('/home/aistudio/data',mode='eval')
+eval_dataset = dataset('C:/Users/Somls/Desktop/code/data',mode='eval')
 eval_loader = paddle.io.DataLoader(eval_dataset, batch_size = 8, shuffle=False)
 
 # 加载训练过程保存的最后一个模型
@@ -20,5 +20,5 @@ for _, data in enumerate(eval_loader()):
     y_data = data[1]
     predicts = model_eval(x_data)
     acc = paddle.metric.accuracy(predicts, y_data)
-    accs.append(acc.numpy()[0])
+    accs.append(acc.numpy())
 print('模型在验证集上的准确率为：',np.mean(accs))

@@ -1,8 +1,8 @@
 import paddle
-from base_fun import unzip_data,get_data_list,dataset,draw_process
+from base_fun import unzip_data,get_data_list,dataset,draw_process,read_json_file,write_json_file
 from model import VGGNet
-from parameters import train_parameters
 
+train_parameters = read_json_file("work/parameters.json")
 src_path=train_parameters['src_path']
 target_path=train_parameters['target_path']
 train_list_path=train_parameters['train_list_path']
@@ -23,7 +23,7 @@ with open(eval_list_path, 'w') as f:
 get_data_list(target_path,train_list_path,eval_list_path)
 
 #训练数据加载
-train_dataset = dataset('C:/Users/29416/Desktop/workspace',mode='train')
+train_dataset = dataset('C:/Users/Somls/Desktop/code/data',mode='train')
 train_loader = paddle.io.DataLoader(train_dataset, batch_size=32, shuffle=True)
 
 # 参数配置，要保留之前数据集准备阶段配置的参数，所以使用update更新字典
@@ -35,8 +35,9 @@ train_parameters.update({
     "learning_strategy": {                                    #优化函数相关的配置
         "lr": 0.0001                                          #超参数学习率
     },
-    "checkpoints": "C:/Users/29416/Desktop/workspace/checkpoints"          #保存的路径
+    "checkpoints": "C:/Users/Somls/Desktop/code/work/checkpoints"          #保存的路径
 })
+write_json_file("work/parameters.json", train_parameters) # 将字典写入json文件
 
 model = VGGNet()
 model.train()
@@ -61,8 +62,10 @@ for epo in range(train_parameters['num_epochs']):
         optimizer.clear_grad()
         if steps % train_parameters["skip_steps"] == 0:
             Iters.append(steps)
-            total_loss.append(loss.numpy()[0])
-            total_acc.append(acc.numpy()[0])
+            # total_loss.append(loss.numpy()[0])
+            total_loss.append(loss.numpy())
+            # total_acc.append(acc.numpy()[0])
+            total_acc.append(acc.numpy())
             #打印中间过程
             print('epo: {}, step: {}, loss is: {}, acc is: {}'\
                   .format(epo, steps, loss.numpy(), acc.numpy()))
